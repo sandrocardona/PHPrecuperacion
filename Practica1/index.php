@@ -4,6 +4,7 @@ if(isset($_POST["btnGuardar"])){
     $error_nombre=$_POST["nombre"]=="";
     $error_clave=$_POST["clave"]=="";
     $error_dni=$_POST["dni"]=="";
+    $error_suscrito=$_POST["suscrito"]=="";
 }
 
 ?>
@@ -79,6 +80,11 @@ if(isset($_POST["btnGuardar"])){
         <p>
             <input type="radio" name="suscrito">
             <label for="suscrito">Suscribirme al boletín de novedades</label>
+            <?php 
+            if(isset($_POST["btnGuardar"]) && $error_suscrito){
+                echo "<span class='error'>Campo obligatorio</span>";
+            }
+            ?>
         </p>
         <!-- botones formulario -->
         <p>
