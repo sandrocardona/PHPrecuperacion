@@ -1,10 +1,44 @@
 <?php
+/* === FUNCIONES === */
+
+/* funciones dni */
+function LetraNIF($dni){
+    return substr("TRWAGMYFPDXBNJZSQVHLCKEO", $dni%23, 1);
+}
+
+function dni_bien_escrito($texto){
+    $dni = strtoupper($texto);
+    return strlen($dni)==9 && is_numeric(substr($dni,0,8)) && substr($dni,-1)>="A" && substr($dni,-1)<="Z";
+}
+
+function dni_valido($texto){
+    $numero=substr($texto,0,8);
+    $letra=substr($texto,-1);
+    $valido=LetraNIF($numero)==$letra;
+    return $valido;
+}
+
+
+/* errores formulario */
 if(isset($_POST["btnGuardar"])){
     $error_usuario=$_POST["usuario"]=="";
     $error_nombre=$_POST["nombre"]=="";
     $error_clave=$_POST["clave"]=="";
-    $error_dni=$_POST["dni"]=="";
-    $error_suscrito=$_POST["suscrito"]=="";
+    $error_dni=$_POST["dni"]=="" || !dni_bien_escrito($_POST["dni"]) || !dni_valido($_POST["dni"]);
+    $error_suscrito=!isset($_POST["suscrito"]);
+    $error_foto=$_FILES["foto"]["name"]!="" && ($_FILES["foto"]["error"] || !explode("." , $_FILES["foto"]["tmp_name"]) || !getimagesize($_FILES["foto"]["tmp_name"]) || $_FILES["foto"]["size"] > 500*1024);
+
+    $error_form = $error_usuario || $error_nombre || $error_clave || $error_dni || $error_suscrito;
+    if($error_form){
+        echo "error en el formulario";
+    } else {
+        echo "TODO CORRECTO";
+    }
+}
+
+if(isset($_POST["btnBorrar"])){
+    header("Location:index.php");
+    exit;
 }
 
 ?>
@@ -17,80 +51,19 @@ if(isset($_POST["btnGuardar"])){
     <title>Práctica 1</title>
     <style>
         .error{color: red;}
+        img{
+            width: 200px;
+            height: auto;
+        }
     </style>
 </head>
 <body>
-    <h1>Rellena tu CV</h1>
-    <form action="index.php" method="post">
-        <!-- Usuario -->
-        <p>
-            <label for="usuario">Usuario</label>
-            <input type="text" name="usuario" value="<?php if(isset($_POST["usuario"])) echo $_POST["usuario"] ?>">
-            <?php 
-            if(isset($_POST["btnGuardar"]) && $error_usuario){
-                echo "<span class='error'>Campo obligatorio</span>";
-            }
-            ?>
-        </p>
-        <!-- nombre -->
-        <p>
-            <label for="nombre">Nombre</label>
-            <input type="text" name="nombre" value="<?php if(isset($_POST["nombre"])) echo $_POST["nombre"] ?>">
-            <?php 
-            if(isset($_POST["btnGuardar"]) && $error_nombre){
-                echo "<span class='error'>Campo obligatorio</span>";
-            }
-            ?>
-        </p>
-        <!-- contraseña -->
-        <p>
-            <label for="clave">Clave</label>
-            <input type="password" name="clave">
-            <?php 
-            if(isset($_POST["btnGuardar"]) && $error_clave){
-                echo "<span class='error'>Campo obligatorio</span>";
-            }
-            ?>
-        </p>
-        <!-- DNI -->
-        <p>
-            <label for="dni">DNI</label>
-            <input type="text" name="dni" value="<?php if(isset($_POST["dni"])) echo $_POST["dni"] ?>">
-            <?php 
-            if(isset($_POST["btnGuardar"]) && $error_dni){
-                echo "<span class='error'>Campo obligatorio</span>";
-            }
-            ?>
-        </p>
-        <!-- sexo -->
-        <p>
-            <!-- Hombre -->
-            <label for="hombre">Hombre</label>
-            <input type="radio" name="sexo" value="hombre" checked>
-            <!-- mujer -->
-            <label for="mujer">Mujer</label>
-            <input type="radio" name="sexo" value="mujer">
-        </p>
-        <!-- Subir archivo -->
-        <p>
-            Incluir mi foto (Máx 500KB) <button name="btnSubir">Seleccionar archivo</button>
-            <?php ?>
-        </p>
-        <!-- Suscribirse -->
-        <p>
-            <input type="radio" name="suscrito">
-            <label for="suscrito">Suscribirme al boletín de novedades</label>
-            <?php 
-            if(isset($_POST["btnGuardar"]) && $error_suscrito){
-                echo "<span class='error'>Campo obligatorio</span>";
-            }
-            ?>
-        </p>
-        <!-- botones formulario -->
-        <p>
-            <button name="btnGuardar" type="submit">Guardar</button>
-            <button name="btnBorrar" type="submit">Borrar</button>
-        </p>
-    </form>
+    <?php
+        if(isset($_POST["btnGuardar"]) && !$error_form){
+            require "vistas/vista_respuesta.php";
+        } else {
+            require "vistas/vista_formulario.php";
+        }
+    ?>
 </body>
 </html>
