@@ -6,6 +6,10 @@ if(isset($_POST["btnEntrar"])){
 }
 
 
+if(isset($_POST["btnRegistrarse"])){
+
+}
+
 
 ?>
 
@@ -17,6 +21,7 @@ if(isset($_POST["btnEntrar"])){
     <title>Práctica 2</title>
     <style>
         .error{color: red;font-weight: bold;}
+        img{width: 200px;}
     </style>
 </head>
 <body>
