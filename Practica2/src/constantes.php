@@ -1,6 +1,6 @@
 <?php
-    define("SERVIDOR","localhost");
-    define("USER","jose");
-    define("PWD","josefa");
-    define("DB","bd_rec_cv");
+define("SERVIDOR_BD","localhost");
+define("USUARIO_BD","jose");
+define("CLAVE_BD","josefa");
+define("NOMBRE_BD","bd_guardias_exam");
 ?>
