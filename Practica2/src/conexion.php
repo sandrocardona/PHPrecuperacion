@@ -1,5 +1,4 @@
 <?php
-
     try{
         $conexion=new PDO("mysql:host=".SERVIDOR_BD.";dbname=".NOMBRE_BD,USUARIO_BD,CLAVE_BD,array(PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES 'utf8'")); 
     }
@@ -25,4 +24,8 @@
     } else {
         $respuesta["mensaje"]="Usuario no registrado en BD";
     }
+
+    $_SESSION["usuario"] = $respuesta["usuario"]["usuario"];
+    $_SESSION["clave"] = $respuesta["usuario"]["clave"];
+    $_SESSION["tipo"] = $respuesta["usuario"]["tipo"];
 ?>
