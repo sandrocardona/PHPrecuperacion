@@ -11,6 +11,7 @@ if(isset($_POST["btnEntrar"])){
     $error_clave=$_POST["clave"]=="";
 
     if(!$error_usuario || !$error_clave){
+        $datos = [$_POST["usuario"], md5($_POST["clave"])];
         require "./src/conexion.php";
     }
 }
@@ -18,6 +19,11 @@ if(isset($_POST["btnEntrar"])){
 
 if(isset($_POST["btnRegistrarse"])){
 
+}
+
+if(isset($_POST["btnSalir"])){
+    session_destroy();
+    header("Location:index.php");
 }
 
 
@@ -44,6 +50,7 @@ if(isset($_POST["btnRegistrarse"])){
         } else {
             require "./vistas/admin.php";
         }
+
     } else {
 
         if(isset($_POST["btnRegistrarse"])){

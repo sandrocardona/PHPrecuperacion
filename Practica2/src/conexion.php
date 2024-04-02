@@ -21,11 +21,16 @@
 
     if($sentencia->rowCount() > 0){
         $respuesta["usuario"] = $sentencia->fetch(PDO::FETCH_ASSOC);
+
+        $_SESSION["usuario"] = $respuesta["usuario"]["usuario"];
+        $_SESSION["clave"] = $respuesta["usuario"]["clave"];
+        $_SESSION["tipo"] = $respuesta["usuario"]["tipo"];
+
     } else {
         $respuesta["mensaje"]="Usuario no registrado en BD";
+
+        echo $respuesta["mensaje"];
     }
 
-    $_SESSION["usuario"] = $respuesta["usuario"]["usuario"];
-    $_SESSION["clave"] = $respuesta["usuario"]["clave"];
-    $_SESSION["tipo"] = $respuesta["usuario"]["tipo"];
+
 ?>
