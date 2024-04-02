@@ -16,7 +16,7 @@
     catch(PDOException $e){
         $conexion=null;
         $sentencia=null;
-        $respuesta["error"]="Imposible conectar a la BD. Error:".$e->getMessage();
+        $respuesta["error"]="Imposible realizar la consulta del login. Error:".$e->getMessage();
     }
 
     if($sentencia->rowCount() > 0){
@@ -31,6 +31,5 @@
 
         echo $respuesta["mensaje"];
     }
-
 
 ?>

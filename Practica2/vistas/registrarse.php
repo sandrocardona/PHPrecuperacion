@@ -44,6 +44,34 @@
         <label for="mujer">Mujer</label>
     </p>
     <!-- foto -->
+    <p>
+        <label for="foto">Incluir mi foto (MAX 500 KB)</label>
+        <input type="file" name="foto" accept="image/*">
+        <?php
+            if(isset($_POST["btnGuardar"]) && $error_foto){
+                if(!explode("." , $_FILES["foto"]["tmp_name"])){
+                    echo "<span class='error'>El archivo debe tener extensión</span>";
+                } elseif(!getimagesize($_FILES["foto"]["tmp_name"])){
+                    echo "<span class='error'>El archivo debe ser una imagen</span>";
+                } elseif($_FILES["foto"]["size"] > 500*1024){
+                    echo "<span class='error'>El archivo debe ser menor de 500 KB</span>";
+                } else {
+                    echo "<span class='error'>Error al subir el archivo</span>";
+                }
+            }
+        ?>
+    </p>
     <!-- suscribirse -->
+    <p>
+        <input type="checkbox" name="suscrito" <?php if(isset($_POST["suscrito"])) echo "checked"?>>
+        <label for="suscrito">Suscribirme al boletín de novedades</label>
+        <?php 
+            if(isset($_POST["btnGuardar"]) && $error_suscrito){
+                echo "<span class='error'>Campo obligatorio</span>";
+            }
+        ?>
+    </p>
     <!-- botones -->
+    <button name="btnGuardar">Guardar</button>
+    <button name="btnBorrar">Borrar</button>
 </form>

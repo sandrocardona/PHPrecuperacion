@@ -17,8 +17,18 @@ if(isset($_POST["btnEntrar"])){
 }
 
 
-if(isset($_POST["btnRegistrarse"])){
+if(isset($_POST["btnGuardar"])){
+    $error_usuario=$_POST["usuario"]=="";
+    $error_clave=$_POST["clave"]=="";
+    $error_nombre=$_POST["nombre"]=="";
+    $error_dni=$_POST["dni"]=="" || !dni_bien_escrito($_POST["dni"]) || !dni_valido($_POST["dni"]);
+    $error_foto=$_FILES["foto"]["name"]!="" && ($_FILES["foto"]["error"] || !explode("." , $_FILES["foto"]["tmp_name"]) || !getimagesize($_FILES["foto"]["tmp_name"]) || $_FILES["foto"]["size"] > 500*1024);
 
+    $error_form = $error_usuario || $error_nombre || $error_clave || $error_dni || $error_foto;
+    if(!$error_form){
+        $datos = [$_POST["usuario"], $_POST["clave"], $_POST["nombre"], $_POST["dni"], $_POST["sexo"], $_FILES["foto"], $_POST["suscrito"]];
+    }
+    
 }
 
 if(isset($_POST["btnSalir"])){
