@@ -8,8 +8,8 @@
     }
 
     try{
-        $consulta = "INSERT INTO usuarios (usuario, clave, nombre, dni, sexo, foto, suscripcion, tipo) 
-        VALUES (?,?,?,?,?,?,?,?);";
+        $consulta = "INSERT INTO usuarios (usuario, clave, nombre, dni, sexo, suscripcion) 
+        VALUES (?,?,?,?,?,?);";
         $sentencia=$conexion->prepare($consulta);
         $sentencia->execute($datos);
     }
