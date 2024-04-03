@@ -29,7 +29,6 @@
     } else {
         $respuesta["mensaje"]="Usuario no registrado en BD";
 
-        echo $respuesta["mensaje"];
     }
 
 ?>

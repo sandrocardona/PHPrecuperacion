@@ -67,6 +67,9 @@ if(isset($_POST["btnSalir"])){
             require "./vistas/registrarse.php";
         } else {
             require "./vistas/login.php";
+            if(isset($respuesta["mensaje"])){
+                echo "<p class='error'>".$respuesta["mensaje"]."</p>";
+            }
         }
     }
 
