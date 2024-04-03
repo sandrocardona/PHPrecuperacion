@@ -2,6 +2,7 @@
 
 require "./src/constantes.php";
 
+
 session_name("Practica2index");
 session_start();
 
