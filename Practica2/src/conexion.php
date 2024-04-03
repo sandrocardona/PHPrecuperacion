@@ -5,6 +5,8 @@
 
     catch(PDOException $e){
         $respuesta["error"]="Imposible conectar a la BD. Error:".$e->getMessage();
+        echo "<p class='error'>".$respuesta["error"]."</p>";
+        die();
     }
 
     try{
@@ -17,6 +19,8 @@
         $conexion=null;
         $sentencia=null;
         $respuesta["error"]="Imposible realizar la consulta del login. Error:".$e->getMessage();
+        echo "<p class='error'>".$respuesta["error"]."</p>";
+        die();
     }
 
     if($sentencia->rowCount() > 0){
@@ -27,8 +31,7 @@
         $_SESSION["tipo"] = $respuesta["usuario"]["tipo"];
 
     } else {
-        $respuesta["mensaje"]="Usuario no registrado en BD";
-
+        $respuesta["error"]="Usuario no registrado en BD";
     }
 
 ?>
