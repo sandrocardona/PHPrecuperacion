@@ -61,12 +61,12 @@ if(isset($_POST["btnEnviar"]))
     {
 
         try{
-            if(isset($_POST["subscripcion"]))
+            if(isset($_POST["suscripcion"]))
                 $subs=1;
             else
                 $subs=0;
 
-            $consulta = "insert into usuarios (usuario,nombre,clave,dni,sexo,subscripcion) values (?,?,?,?,?,?)";
+            $consulta = "insert into usuarios (usuario,nombre,clave,dni,sexo,suscripcion) values (?,?,?,?,?,?)";
             $sentencia=$conexion->prepare($consulta);
             $sentencia->execute([$_POST["usuario"],$_POST["nombre"],md5($_POST["clave"]),strtoupper($_POST["dni"]),$_POST["sexo"],$subs]);
             $sentencia=null;
@@ -211,7 +211,7 @@ if(isset($_POST["btnEnviar"]))
             ?>
         </p>
         <p>
-            <input type="checkbox" id="subsc" name="subscripcion" <?php if(isset($_POST["subscripcion"])) echo "checked";?>>
+            <input type="checkbox" id="subsc" name="suscripcion" <?php if(isset($_POST["suscripcion"])) echo "checked";?>>
             <label for="subsc">Suscribirme al boletín de novedades: </label><br>
         </p>
         <p>

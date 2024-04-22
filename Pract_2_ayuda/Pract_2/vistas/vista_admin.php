@@ -7,10 +7,10 @@ if(isset($_POST["btnContEditar"]))
     $dni=$_POST["dni"];
     $foto=$_POST["foto_bd"];
     $sexo=$_POST["sexo"];
-    if(isset($_POST["subscripcion"]))
-        $subscripcion=1;
+    if(isset($_POST["suscripcion"]))
+        $suscripcion=1;
     else
-        $subscripcion=0;
+        $suscripcion=0;
 
     //Una vez recogido valores compruebo errores
     $error_nombre=$_POST["nombre"]=="";
@@ -50,13 +50,13 @@ if(isset($_POST["btnContEditar"]))
             
             if($_POST["clave"]=="")
             {
-                $consulta = "update usuarios set nombre=?, usuario=?, dni=?, sexo=?, subscripcion=? where id_usuario=?";
-                $datos_edit=[$nombre,$usuario,strtoupper($dni),$sexo,$subscripcion,$id_usuario];
+                $consulta = "update usuarios set nombre=?, usuario=?, dni=?, sexo=?, suscripcion=? where id_usuario=?";
+                $datos_edit=[$nombre,$usuario,strtoupper($dni),$sexo,$suscripcion,$id_usuario];
             }
             else
             {
-                $consulta = "update usuarios set nombre=?, usuario=?, clave=?, dni=?, sexo=?, subscripcion=? where id_usuario=?";
-                $datos_edit=[$nombre,$usuario,md5($_POST["clave"]),strtoupper($dni),$sexo,$subscripcion,$id_usuario];
+                $consulta = "update usuarios set nombre=?, usuario=?, clave=?, dni=?, sexo=?, suscripcion=? where id_usuario=?";
+                $datos_edit=[$nombre,$usuario,md5($_POST["clave"]),strtoupper($dni),$sexo,$suscripcion,$id_usuario];
             }
             
             $sentencia=$conexion->prepare($consulta);
@@ -153,12 +153,12 @@ if(isset($_POST["btnContNuevo"]))
     {
 
         try{
-            if(isset($_POST["subscripcion"]))
+            if(isset($_POST["suscripcion"]))
                 $subs=1;
             else
                 $subs=0;
 
-            $consulta = "insert into usuarios (usuario,nombre,clave,dni,sexo,subscripcion) values (?,?,?,?,?,?)";
+            $consulta = "insert into usuarios (usuario,nombre,clave,dni,sexo,suscripcion) values (?,?,?,?,?,?)";
             $sentencia=$conexion->prepare($consulta);
             $sentencia->execute([$_POST["usuario"],$_POST["nombre"],md5($_POST["clave"]),strtoupper($_POST["dni"]),$_POST["sexo"],$subs]);
             $sentencia=null;
@@ -256,7 +256,7 @@ if(isset($_POST["btnEditar"]) || isset($_POST["btnBorrarEditar"]))
             $dni=$detalles_usu["dni"];
             $foto=$detalles_usu["foto"];
             $sexo=$detalles_usu["sexo"];
-            $subscripcion=$detalles_usu["subscripcion"];
+            $suscripcion=$detalles_usu["suscripcion"];
 
         }
        
@@ -365,7 +365,7 @@ $sentencia=null;
             echo "<p><strong>Contraseña: </strong>*********</p>";
             echo "<p><strong>DNI: </strong>".$detalles_usu["dni"]."</p>";
             echo "<p><strong>Sexo: </strong>".$detalles_usu["sexo"]."</p>";
-            if($detalles_usu["subscripcion"])
+            if($detalles_usu["suscripcion"])
                 echo "<p><strong>Subscripción: </strong>Sí</p>";
             else   
                 echo "<p><strong>Subscripción: </strong>No</p>";
@@ -460,7 +460,7 @@ $sentencia=null;
                     ?>
                 </p>
                 <p>
-                    <input type="checkbox" id="subsc" name="subscripcion" <?php if($subscripcion) echo "checked";?>>
+                    <input type="checkbox" id="subsc" name="suscripcion" <?php if($suscripcion) echo "checked";?>>
                     <label for="subsc">Suscribirme al boletín de novedades: </label><br>
                 </p>
                 
@@ -563,7 +563,7 @@ $sentencia=null;
             ?>
         </p>
         <p>
-            <input type="checkbox" id="subsc" name="subscripcion" <?php if(isset($_POST["subscripcion"])) echo "checked";?>>
+            <input type="checkbox" id="subsc" name="suscripcion" <?php if(isset($_POST["suscripcion"])) echo "checked";?>>
             <label for="subsc">Suscribirme al boletín de novedades: </label><br>
         </p>
         <p>
