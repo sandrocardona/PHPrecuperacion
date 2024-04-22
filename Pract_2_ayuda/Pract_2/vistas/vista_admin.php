@@ -75,8 +75,33 @@ if(isset($_POST["btnContEditar"]))
         if($_FILES["foto"]["name"]!="")
         {
             // generar nombre nueva foto
+            $array_ext=explode(".",$_FILES["foto"]["name"]);
+            $ext=".".end($array_ext);
+            $nombre_nuevo="img_".$id_usuario.$ext;
             //mover nueva foto a images
-            //si nombre nueva foto es distinta a $foto(bd)
+            @$var=move_uploaded_file($_FILES["foto"]["tmp_name"],"images/".$nombre_nuevo);
+            if($var){
+                //si nombre nueva foto es distinta a $foto(bd)
+                if($foto!=$nombre_nuevo){
+                    try{
+                        $consulta="UPDATE usuarios SET foto=? WHERE id_usuario=?";
+                        $sentencia=$conexion->prepare($consulta);
+                        $sentencia->execute([$nombre_nuevo,$id_usuario]);
+                        $sentencia=null;
+                        if($foto!=FOTO_DEFECTO && file_exists("images/".$foto)){
+                            unlink("images/".$foto);
+                        }
+                    } catch(PDOException $e){
+                        $sentencia=null;
+                        $conexion=null;
+                        if(file_exists(("images/".$nombre_nuevo)))
+                            unlink("images/".$nombre_nuevo);
+                        $mensaje="Usuario editado con éxito pero sin cambiar la img en el catch";
+                    }
+                }
+            } else {
+                $mensaje="Usuario editado con éxito pero sin cambiar la img en el else";
+            }
             // actualizo BD y  si la $foto(bd) es distinta a "no_imagen.jpg entonces borro $foto de images 
         }
         $conexion=null;
