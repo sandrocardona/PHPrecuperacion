@@ -1,9 +1,11 @@
 <?php
     //Variables constantes
-        define("DIR_BD", "Localhost");
-        define("NAME_BD", "bd_libreria_exam");
-        define("USER_BD", "jose");
-        define("PWD_BD", "josefa");
+        define("SERVIDOR_BD", "localhost");
+        define("NOMBRE_BD", "bd_libreria_exam");
+        define("USUARIO_BD", "jose");
+        define("CLAVE_BD", "josefa");
+
+        define("MINUTOS", 55);
 
     //Funciones
         function error_page($title, $body)
