@@ -1,8 +1,13 @@
 <?php
 require "./src/constantes.php";
 
-if(isset($_POST["btnSalir"])){
+session_name("intento1");
+session_start();
 
+if(isset($_POST["btnSalir"])){
+    session_destroy();
+    header("Location:index.php");
+    exit;
 }
 
 if(isset($_SESSION["usuario"])){

@@ -1,3 +1,16 @@
+<?php
+
+if(isset($_POST["btnLogin"])){
+    $error_usuario = $_POST["usuario"] == "";
+    $error_clave = $_POST["clave"] == "";
+    $error_form = $error_usuario || $error_clave;
+    if(!isset($error_form)){
+        
+    }
+}
+
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
