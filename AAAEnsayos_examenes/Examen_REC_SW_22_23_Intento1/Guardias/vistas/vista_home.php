@@ -8,7 +8,7 @@
 <body>
     <h1>Gestión de Guardias</h1>
     <div>
-        <p>Bienvenido <?php $_SESSION["usuario"] ?></p>
+        <p>Bienvenido <?php echo "<strong>".$_SESSION["usuario"]."</strong>" ?></p>
         <form action="index.php" method="post">
             <button name="btnSalir">Salir</button>
         </form>
