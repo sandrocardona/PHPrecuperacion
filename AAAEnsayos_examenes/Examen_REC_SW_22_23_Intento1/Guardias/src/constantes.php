@@ -2,6 +2,7 @@
 
 //Variables
 define("DIR_SERV","http://localhost/Recuperacion/PHPrecuperacion/AAAEnsayos_examenes/Examen_REC_SW_22_23_Intento1/servicios_rest/");
+define("MINUTOS","50");
 
 //Funciones
 

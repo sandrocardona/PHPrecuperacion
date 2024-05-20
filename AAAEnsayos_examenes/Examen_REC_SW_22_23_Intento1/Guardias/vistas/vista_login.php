@@ -73,7 +73,7 @@ if(isset($_POST["btnLogin"])){
             <!-- contraseña -->
             <p>
                 <label for="clave">Contraseña</label>
-                <input type="text" name="clave" id="clave">
+                <input type="password" name="clave" id="clave">
                 <?php
                     if(isset($_POST["btnLogin"])){
                         if($_POST["clave"] == "")
