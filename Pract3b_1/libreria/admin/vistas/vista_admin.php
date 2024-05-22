@@ -420,7 +420,7 @@ $sentencia = null;
 <body>
 
     <div class="primero">
-        Bienvenido <strong><?php echo $datos_usuario_log["lector"]; ?></strong> -
+        Bienvenido admin: <strong><?php echo $datos_usuario_log["lector"]; ?></strong> -
         <form class="en_linea" action="../index.php" method="post">
             <button class="enlace" name="btnSalir" type="submit">Salir</button>
         </form>

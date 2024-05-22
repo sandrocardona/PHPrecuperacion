@@ -65,7 +65,7 @@ if(!$obj)
 <body>
     <h1>Práctica Rec 2</h1>
     <div>
-        Bienvenido <strong><?php echo $datos_usuario_log->lector; ?></strong> -
+        Bienvenido usuario: <strong><?php echo $datos_usuario_log->lector; ?></strong> -
         <form class="en_linea" action="index.php" method="post">
             <button class="enlace" name="btnSalir" type="submit">Salir</button>
         </form>
