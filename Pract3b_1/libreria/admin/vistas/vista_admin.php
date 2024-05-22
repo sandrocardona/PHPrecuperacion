@@ -272,7 +272,10 @@ if ($_SESSION["regs_mostrar"] == -1) {
     $sentencia = null;
     $n_pags = ceil($total_registros / $_SESSION["regs_mostrar"]);
 }
+
 /*****consulta para mostra la tabla******/
+
+$ini_pag = ($_SESSION["pag"] - 1) * $_SESSION["regs_mostrar"];
 
 try {
 
@@ -548,7 +551,7 @@ $sentencia = null;
         ?>
 
         <div class="segundo">
-            <h1 class="h1segundo">Listado de los Libros</h1>
+            <h1 class="h1segundo">Listado de los LibrosGGG</h1>
             <div class='buscador'>
                 <form id='form_regs_filtro' class="d_flex" action='gest_libros.php' method='post'>
                     <div>

@@ -7,6 +7,7 @@ $app= new \Slim\App;
 
 require "src/funciones_api.php";
 
+/* === salir === */
 
 $app->post("/salir",function($request){
 
@@ -17,12 +18,16 @@ $app->post("/salir",function($request){
     echo json_encode($respuesta);
 });
 
+/* === login === */
+
 $app->post("/login",function($request){
 
     $datos[]=$request->getParam("usuario");
     $datos[]=$request->getParam("clave");
     echo json_encode(login($datos));
 });
+
+/* === logueado === */
 
 $app->post("/logueado",function($request){
 
@@ -43,7 +48,7 @@ $app->post("/logueado",function($request){
     
 });
 
-/* obtener_libros */
+/* === obtener_libros === */
 
 $app->get("/obtener_libros",function($request){
     

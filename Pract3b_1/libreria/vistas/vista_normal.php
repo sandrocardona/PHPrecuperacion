@@ -1,26 +1,19 @@
 <?php
 
-/*****consulta para mostra la tabla******/
-try {
-    $conexion = new PDO("mysql:host=" . SERVIDOR_BD . ";dbname=" . NOMBRE_BD, USUARIO_BD, CLAVE_BD, array(PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES 'utf8'"));
-} catch (PDOException $e) {
-    session_destroy();
-    die(error_page("Examen3 Librería", "<h1>Examen3 Librería</h1><p>Imposible conectar a la BD. Error:" . $e->getMessage() . "</p>"));
-}
-
-try {
-
-    $consulta = "SELECT * FROM libros ";
-    $sentencia = $conexion->prepare($consulta);
-    $sentencia->execute();
-} catch (PDOException $e) {
-    $sentencia = null;
-    $conexion = null;
-    session_destroy();
-    die(error_page("Examen3 Librería", "<h1>Examen3 Librería</h1><p>Imposible realizar la consulta. Error:" . $e->getMessage() . "</p>"));
-}
-$libros = $sentencia->fetchAll(PDO::FETCH_ASSOC);
-$sentencia = null;
+$url = DIR_SERV."/obtener_libros";
+$respuesta=consumir_servicios_REST($url,"GET");
+//$obj=json_decode($respuesta,true); // asi te traes el array asociativo
+$obj=json_decode($respuesta,true); // asi te tres el objeto
+if(!$obj)
+ {
+     session_destroy();
+     die("<p>Error consumiendo el servicio en obtener_libro: ".$url."</p></body></html>");
+ }
+ if(isset($obj->error))
+ {
+     session_destroy();
+     die("<p>".$obj->error."</p></body></html>");
+ }
 ?>
 
 <!DOCTYPE html>
@@ -72,7 +65,7 @@ $sentencia = null;
 <body>
     <h1>Práctica Rec 2</h1>
     <div>
-        Bienvenido <strong><?php echo $datos_usuario_log["lector"]; ?></strong> -
+        Bienvenido <strong><?php echo $datos_usuario_log->lector; ?></strong> -
         <form class="en_linea" action="index.php" method="post">
             <button class="enlace" name="btnSalir" type="submit">Salir</button>
         </form>
@@ -80,17 +73,14 @@ $sentencia = null;
     <h1>Listado de los Libros</h1>
 
     <?php
+
+    //si te traes el array asociativo 
     echo "<div class='contenedor'>";
-    foreach ($libros as $tupla) {
+    foreach ($obj["libros"] as $tupla) {
         echo "<div class='list_libros'>";
-        echo "<img class='reducida' src='images/" . $tupla["portada"] . "' alt='Foto' title='Foto'></br>";
-        echo "<p>" . $tupla["titulo"] . " -- " . $tupla["precio"] . "</p>";
+        echo "<img class='reducida' src='images/" .$tupla['portada'] . "' alt='Foto' title='Foto'></br>";
+        echo "<p>" . $tupla['titulo'] . " -- " .$tupla['precio'] . "</p>";
         echo "</div>";
-    }
-    echo "</div>";
-    if (isset($_SESSION["seguridad"])) {
-        echo "<p class='mensaje'>" . $_SESSION["seguridad"] . "</p>";
-        session_destroy();
     }
 
     ?>
