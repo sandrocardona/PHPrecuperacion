@@ -7,16 +7,36 @@ $app= new \Slim\App;
 
 
 
-
+//login
 $app->post('/login',function($request){
 
-    $usuario=$request->getParam("usuario");
-    $clave=$request->getParam("clave");
+    $datos[]=$request->getParam("usuario");
+    $datos[]=$request->getParam("clave");
 
 
-    echo json_encode(login($usuario,$clave));
+    echo json_encode(login($datos));
 });
 
+
+//logeado
+$app->get('/logueado',function($request){
+
+    $api_session=$request->getParam("api_session");
+    session_id($api_session);
+    session_start();
+
+    if(isset($_SESSION["usuario"])){
+        $datos[] = $_SESSION["usuario"];
+        $datos[] = $_SESSION["clave"];
+
+        echo json_encode(logueado($datos));
+    } else {
+        session_destroy();
+
+        $respuesta["no_auth"] = "No tienes permiso para usar este servicio";
+        echo json_encode($respuesta);
+    }
+});
 
 $app->post('/salir',function($request){
 
