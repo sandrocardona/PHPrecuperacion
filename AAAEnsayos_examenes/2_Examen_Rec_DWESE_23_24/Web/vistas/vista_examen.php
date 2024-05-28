@@ -59,7 +59,7 @@ for ($hora = 1; $hora < count($horas); $hora++) {
     <title>Práctica Rec 3</title>
     <style>
         .en_linea {
-            display: inline
+            display: inline;
         }
 
         .enlace {
@@ -67,18 +67,18 @@ for ($hora = 1; $hora < count($horas); $hora++) {
             background: none;
             color: blue;
             text-decoration: underline;
-            cursor: pointer
+            cursor: pointer;
         }
 
         .mensaje {
             font-size: 1.25em;
-            color: blue
+            color: blue;
         }
 
         table,
         th,
         td {
-            border: 1px, solid, black
+            border: 1px solid black;
         }
 
         table {
