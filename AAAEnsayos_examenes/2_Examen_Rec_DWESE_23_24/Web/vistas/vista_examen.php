@@ -1,4 +1,29 @@
 <?php
+
+if(isset($_POST["btnDetalles"])){
+    $respuesta = consumir_servicios_REST(DIR_SERV . "/usuario/" . $_POST["btnDetalles"], "GET", $datos_env);
+    $json = json_decode($respuesta, true);
+    if (!$json) {
+        session_destroy();
+        die(error_page("Práctica ExamenRec_SW_23_24  HORARIOS", "<h1>Práctica ExamenRec_SW_23_24  HORARIOS</h1><p>Sin respuesta oportuna de la API usuario</p>"));
+    }
+
+    if (isset($json["error"])) {
+        session_destroy();
+        consumir_servicios_REST(DIR_SERV . "/salir", "POST");
+        die(error_page("Práctica ExamenRec_SW_23_24  HORARIOS", "<h1>Práctica ExamenRec_SW_23_24  HORARIOS</h1><p>" . $json["error_bd"] . "</p>"));
+    }
+
+    if (isset($json["no_auth"])) {
+        session_unset();
+        $_SESSION["seguridad"] = "Usted ha dejado de tener acceso a la API. Por favor vuelva a loguearse.";
+        header("Location:index.php");
+        exit();
+    }
+
+    $detalle_profesor = $json["usuario"];
+}
+
 //gestión de profesores y horarios
 //días de la semana
 $dias[1] = "Lunes";
@@ -107,7 +132,11 @@ for ($hora = 1; $hora < count($horas); $hora++) {
         echo "<tr>";
         echo "<th>Horas</th>";
         echo "<th>Profesor de Guardia</th>";
-        echo "<th>Informacion del profesaor con ID</th>";
+        echo "<th>Informacion del profesaor con ID";
+        if(isset($detalle_profesor)){
+            echo $detalle_profesor["id_usuario"];
+        }
+        echo "</th>";
         echo "</tr>";
         for ($hora = 1; $hora < count($horas); $hora++) {
 
@@ -125,7 +154,20 @@ for ($hora = 1; $hora < count($horas); $hora++) {
                 echo"</ol>";
                 echo"</form>";
                 echo "</td>";
-                echo "<td></td>";
+                echo "<td>";
+                if(isset($detalle_profesor) && $hora==1){
+                    echo "<p>";
+                    echo "<strong>Nombre: </strong>".$detalle_profesor["nombre"]."<br />";
+                    echo "<strong>Usuario: </strong>".$detalle_profesor["usuario"]."<br />";
+                    echo "<strong>Contraseña: </strong><br />";
+                    echo "<strong>Email: </strong>";
+                    if(isset($detalle_profesor["email"]))
+                        echo $detalle_profesor["email"];
+                    else
+                        echo "No disponible";
+                    echo "</p>";
+                }
+                echo "</td>";
                 echo "</tr>";
             }
         }

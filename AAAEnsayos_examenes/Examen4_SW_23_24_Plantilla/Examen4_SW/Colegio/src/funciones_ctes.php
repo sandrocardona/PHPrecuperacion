@@ -1,9 +1,4 @@
 <?php
-
-
-define("DIR_SERV","http://localhost/Recuperacion/PHPrecuperacion/AAAEnsayos_examenes/2_Examen_Rec_DWESE_23_24/servicios_rest");
-define("MINUTOS",300);
-
 function consumir_servicios_REST($url,$metodo,$datos=null)
 {
     $llamada=curl_init();
@@ -24,4 +19,8 @@ function error_page($title,$body)
     $html.='<body>'.$body.'</body></html>';
     return $html;
 }
+
+
+define("DIR_SERV","http://localhost/Proyectos/Examen4_SW/servicios_rest");
+define("MINUTOS",15);
 ?>
