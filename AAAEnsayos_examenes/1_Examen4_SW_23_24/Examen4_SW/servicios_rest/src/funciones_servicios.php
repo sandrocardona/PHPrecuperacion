@@ -95,4 +95,92 @@ function logueado($usuario, $clave)
     return $respuesta;
 }
 
+
+/* === obtener_notas_alumno === */
+
+function obtener_notas_alumno($cod_usu)
+{
+    try{
+        $conexion= new PDO("mysql:host=".SERVIDOR_BD.";dbname=".NOMBRE_BD,USUARIO_BD,CLAVE_BD,array(PDO::MYSQL_ATTR_INIT_COMMAND=>"SET NAMES 'utf8'"));
+    }
+    catch(PDOException $e){
+        $respuesta["error"]="Imposible conectar en logueado:".$e->getMessage();
+    }
+
+    try{
+        $consulta = "SELECT asignaturas.cod_asig, asignaturas.denominacion, notas.nota FROM asignaturas, nota WHERE asignaturas.cod_asig=notas.cod_asig AND cod_usu=?";
+        $sentencia = $conexion->prepare($consulta);
+        $sentencia->execute($cod_usu);
+    }
+
+    catch(PDOException $e){
+        $respuesta["error"]="Imposible realizar consulta en logueado:".$e->getMessage();
+    }
+
+    $respuesta["notas"] = $sentencia->fetch(PDO::FETCH_ASSOC);
+
+    $sentencia = null;
+    $conexion = null;
+
+    return $respuesta;
+}
+
+/* === obtener_alumnos === */
+
+function obtener_alumnos()
+{
+    try{
+        $conexion= new PDO("mysql:host=".SERVIDOR_BD.";dbname=".NOMBRE_BD,USUARIO_BD,CLAVE_BD,array(PDO::MYSQL_ATTR_INIT_COMMAND=>"SET NAMES 'utf8'"));
+    }
+    catch(PDOException $e){
+        $respuesta["error"]="Imposible conectar en logueado:".$e->getMessage();
+    }
+
+    try{
+        $consulta = "SELECT * FROM usuarios WHERE tipo = 'alumno'";
+        $sentencia = $conexion->prepare($consulta);
+        $sentencia->execute();
+    }
+
+    catch(PDOException $e){
+        $respuesta["error"]="Imposible realizar consulta en obtener_alumnos():".$e->getMessage();
+    }
+
+    $respuesta["notas"] = $sentencia->fetch(PDO::FETCH_ASSOC);
+
+    $sentencia = null;
+    $conexion = null;
+
+    return $respuesta;
+}
+
+/* === quitar_nota_alumno_asig === */
+
+function quitar_nota_alumno_asig($cod_usu, $cod_asig)
+{
+    try{
+        $conexion= new PDO("mysql:host=".SERVIDOR_BD.";dbname=".NOMBRE_BD,USUARIO_BD,CLAVE_BD,array(PDO::MYSQL_ATTR_INIT_COMMAND=>"SET NAMES 'utf8'"));
+    }
+    catch(PDOException $e){
+        $respuesta["error"]="Imposible conectar en logueado:".$e->getMessage();
+    }
+
+    try{
+        $consulta = "DELETE FROM notas WHERE cod_usu=? AND cod_asig=?";
+        $sentencia = $conexion->prepare($consulta);
+        $sentencia->execute([$cod_usu, $cod_asig]);
+    }
+
+    catch(PDOException $e){
+        $respuesta["error"]="Imposible realizar consulta en obtener_alumnos():".$e->getMessage();
+    }
+
+    $respuesta["mensaje"] = "Asignatura descalificada con éxito";
+
+    $sentencia = null;
+    $conexion = null;
+
+    return $respuesta;
+}
+
 ?>
