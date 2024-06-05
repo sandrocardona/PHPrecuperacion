@@ -97,6 +97,46 @@ $app->delete('/quitarNota/{cod_usu}',function($request){
 
 });
 
+/* cambiar nota */
+$app->put('/cambiarNota/{cod_usu}',function($request){
+
+    session_id($request->getParam("api_session"));
+    session_start();
+    if(isset($_SESSION["user"]) && $_SESSION["type"]=="tutor")
+    {
+     
+        echo json_encode(cambiar_nota_alumno_asig($request->getAttribute("cod_usu"),$request->getParam("cod_asig"), $request->getParam("nota")));
+    }
+    else
+    {
+        session_destroy();
+        $respuesta["no_auth"]="No tienes permisos para usar este servicio";
+        echo json_encode($respuesta);
+    }
+
+});
+
+/* ponerNota nota */
+$app->post('/ponerNota/{cod_usu}',function($request){
+
+    session_id($request->getParam("api_session"));
+    session_start();
+    if(isset($_SESSION["user"]) && $_SESSION["type"]=="tutor")
+    {
+     
+        echo json_encode(poner_nota_alumno_asig($request->getAttribute("cod_usu"),$request->getParam("cod_asig")));
+    }
+    else
+    {
+        session_destroy();
+        $respuesta["no_auth"]="No tienes permisos para usar este servicio";
+        echo json_encode($respuesta);
+    }
+
+});
+
+
+
 // Una vez creado servicios los pongo a disposición
 $app->run();
 ?>

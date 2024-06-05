@@ -180,4 +180,72 @@ function quitar_nota_alumno_asig($cod_usu,$cod_asig)
     return $respuesta;
     
 }
+
+/* === cambiar_nota_alumno_asig === */
+function cambiar_nota_alumno_asig($cod_usu,$cod_asig, $nota)
+{
+    try{
+        $conexion= new PDO("mysql:host=".SERVIDOR_BD.";dbname=".NOMBRE_BD,USUARIO_BD,CLAVE_BD,array(PDO::MYSQL_ATTR_INIT_COMMAND=>"SET NAMES 'utf8'"));
+       
+    }
+    catch(PDOException $e){
+        $respuesta["error"]="Imposible conectar:".$e->getMessage();
+        return $respuesta;
+    }
+
+    try{
+        $consulta="UPDATE notas SET nota WHERE cod_usu=? and cod_asig=?";
+        $sentencia=$conexion->prepare($consulta);
+        $sentencia->execute([$cod_usu,$cod_asig]);
+    }
+    catch(PDOException $e){
+        $respuesta["error"]="Imposible realizar la consulta:".$e->getMessage();
+        $sentencia=null;
+        $conexion=null;
+        return $respuesta;
+    }
+
+   
+    $respuesta["mensaje"]="Asignatura descalificada con éxito";
+        
+   
+    $sentencia=null;
+    $conexion=null;
+    return $respuesta;
+    
+}
+
+/* === ponerr_nota_alumno_asig === */
+function poner_nota_alumno_asig($cod_usu,$cod_asig)
+{
+    try{
+        $conexion= new PDO("mysql:host=".SERVIDOR_BD.";dbname=".NOMBRE_BD,USUARIO_BD,CLAVE_BD,array(PDO::MYSQL_ATTR_INIT_COMMAND=>"SET NAMES 'utf8'"));
+       
+    }
+    catch(PDOException $e){
+        $respuesta["error"]="Imposible conectar:".$e->getMessage();
+        return $respuesta;
+    }
+
+    try{
+        $consulta="INSERT INTO notas (cod_usu, cod_asig, nota) VALUES (?,?,0)";
+        $sentencia=$conexion->prepare($consulta);
+        $sentencia->execute([$cod_usu,$cod_asig]);
+    }
+    catch(PDOException $e){
+        $respuesta["error"]="Imposible realizar la consulta:".$e->getMessage();
+        $sentencia=null;
+        $conexion=null;
+        return $respuesta;
+    }
+
+   
+    $respuesta["mensaje"]="Asignatura calificada con éxito";
+        
+   
+    $sentencia=null;
+    $conexion=null;
+    return $respuesta;
+    
+}
 ?>
