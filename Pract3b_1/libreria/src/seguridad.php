@@ -1,51 +1,53 @@
 <?php
-//conexión
-try{
-    $conexion=new PDO("mysql:host=".SERVIDOR_BD.";dbname=".NOMBRE_BD,USUARIO_BD,CLAVE_BD,array(PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES 'utf8'")); 
-}
-catch(PDOException $e){
+$datos_envio["api_key"] = $_SESSION["api_session"];
+$url_salir = DIR_SERV."/salir";
+
+$url = DIR_SERV."/logueado";
+$respuesta = consumir_servicios_REST($url, "POST", $datos_envio);
+$obj_logueado = json_decode($respuesta);
+
+if(!$obj_logueado){
+    consumir_servicios_REST($url_salir, "POST", $datos_envio);
     session_destroy();
-    die(error_page("Práctica Rec 2","<h1>Práctica Rec 2</h1><p>Imposible conectar a la BD. Error:".$e->getMessage()."</p>"));
+    die(error_page("NO OBJ", "<p>No hay obj_logueado: ".$url."</p>"));
 }
 
-// compruebo letor
-try{
-    $datos[0]=$_SESSION["usuario"];
-    $datos[1]=$_SESSION["clave"];
-    $consulta = "SELECT * FROM usuarios WHERE lector=? AND clave=?";
-    $sentencia=$conexion->prepare($consulta);
-    $sentencia->execute($datos);
-}
-catch(PDOException $e){
-    $sentencia=null;
-    $conexion=null;
+if(isset($obj_logueado->error_bd)){
+    consumir_servicios_REST($url_salir, "POST", $datos_envio);
     session_destroy();
-    die(error_page("Práctica Rec 2","<h1>Práctica Rec 2</h1><p>Imposible realizar la consulta. Error:".$e->getMessage()."</p>"));
+    die(error_page("ERROR", "<p>ERROR en obj_logueado: ".$obj_logueado->error_bd."</p>"));
 }
 
-if($sentencia->rowCount()<=0)
-{
-        $sentencia=null;
-        $conexion=null;
-        session_unset();
-        $_SESSION["seguridad"]="Usted ya no se encuentra registrado en la BD";
-        header("Location:".$salto);
-        exit();
-}
-
-// Acabo de pasar el control de baneo
-$datos_usuario_log=$sentencia->fetch(PDO::FETCH_ASSOC);
-$sentencia=null;
-
-if(time()-$_SESSION["ultm_accion"]>MINUTOS*60)
-{
-    $conexion=null;
+if(isset($obj_logueado->no_auth)){
+    consumir_servicios_REST($url_salir, "POST", $datos_envio);
     session_unset();
-    $_SESSION["seguridad"]="Su tiempo de sesión ha expirado. Por favor vuelva a loguearse";
+
+    $_SESSION["seguridad"] = "Tiempo de sesión de la API expirado en seguridad";
+    header("Location:".$salto);
+    exit;
+}
+
+if(isset($obj_logueado->mensaje)){
+    consumir_servicios_REST($url_salir, "POST", $datos_envio);
+    session_unset();
+
+    $_SESSION["seguridad"] = "Ya no se encuentra registrado en seguridad";
+    header("Location:".$salto);
+    exit;
+}
+
+$datos_usuario_log = $obj_logueado->usuario;
+
+if(time()-$_SESSION["ultima_accion"]>MINUTOS*60555555)
+{
+    consumir_servicios_REST($url_salir, "POST", $datos_envio);
+    session_unset();
+
+    $_SESSION["seguridad"]="Su tiempo de sesión ha expirado2. Por favor vuelva a loguearse";
     header("Location:".$salto);// depende donde estamos $salto varia; esta variable la cambiamos antes del require de seguridad
     exit();
 }
 // Paso el control de tiempo y lo renuevo
-$_SESSION["ultm_accion"]=time();
+$_SESSION["ultima_accion"]=time();
 
 ?>
