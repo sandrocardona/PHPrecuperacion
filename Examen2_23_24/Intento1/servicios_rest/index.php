@@ -20,7 +20,14 @@ $app->post('/login',function($request){
 $app->get('/profesores',function($request){
 
     echo json_encode(profesores());
+});
 
+/* === horarios_profesor === */
+
+$app->get('/horarios_profesor/{usuario}',function($request){
+
+    $usuario = $request->getAttribute("usuario");
+    echo json_encode(horarios_profesor([$usuario]));
 });
 
 

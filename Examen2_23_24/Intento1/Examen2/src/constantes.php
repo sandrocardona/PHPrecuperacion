@@ -2,7 +2,7 @@
 
 /* === variables constantes === */
 
-define("DIR_SERV","http://localhost/recuPHP/PHPrecuperacion/Examen2_23_24/Intento%201/servicios_rest");
+define("DIR_SERV","http://localhost/recuPHP/PHPrecuperacion/Examen2_23_24/Intento1/servicios_rest");
 define("MINUTOS", 600);
 
 /* === funciones constantes === */
