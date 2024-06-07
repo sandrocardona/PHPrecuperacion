@@ -14,7 +14,7 @@
             table{
                 border: 1px solid black;
                 border-collapse: collapse;
-                width: 80%;
+                width: 100%;
                 text-align: center;
             }
 
@@ -34,6 +34,12 @@
             .td-hora{
                 background-color: lightblue;
                 font-weight: bold;
+            }
+            .enlace{
+                background: none;
+                border: none;
+                color: blue;
+                text-decoration: underline;
             }
 
         </style>
@@ -62,11 +68,10 @@
                 echo "<form method='post' action='index.php'>";
                 echo "<select name='profesores'>";
                 foreach ($profesores as $tupla) {
-                    if(isset($_POST["btnVerHorario"]) && $_POST["profesores"]==$tupla->id_usuario){
+                    if(isset($_POST["btnVerHorario"]) && $_POST["profesores"]==$tupla->id_usuario || isset($_POST["btnEditar"]) && $_POST["profesores"]==$tupla->id_usuario){
                             echo "<option selected value='".$tupla->id_usuario."'>";
                             $nombre_profesor = $tupla->nombre;
-                            $usuario["usuario"] = $tupla->id_usuario;
-
+                            $usuario = $tupla->id_usuario;
                         }
                     else
                         echo "<option value='".$tupla->id_usuario."'>";
@@ -75,76 +80,93 @@
                 }
                 echo "</select>";
                 echo "&nbsp;<button name='btnVerHorario'>Ver Horario</button>";
-                echo "&nbsp;<button name='btnClear'>Clear</button>";
                 echo "</form>";
                 /* === servicio horarios_profesor === */
-                if(isset($_POST["btnVerHorario"])){
-                    $url_horario = DIR_SERV."/horarios_profesor/{usuario}";
-                    $respuesta = consumir_servicios_REST($url_horario, "GET", $usuario);
-                    $obj_horario = json_decode($respuesta, true);
+                if(isset($_POST["btnVerHorario"]) || isset($_POST["btnEditar"])){
+                    $url_horario = DIR_SERV."/horarios_profesor/".$_POST["profesores"];
+                    $respuesta = consumir_servicios_REST($url_horario, "GET");
+                    $obj_horario = json_decode($respuesta);
 
                     if(!$obj_horario){
                         session_destroy();
                         die(error_page("NO OBJ", "No hay obj en obj_horario".$url_horario));
                     }
 
-                    if(isset($obj_horario["error"])){
+                    if(isset($obj_horario->error)){
                         session_destroy();
-                        die(error_page("ERROR", "ERROR en obj_horario".$obj_horario["error"]));
+                        die(error_page("ERROR", "ERROR en obj_horario".$obj_horario->error));
                     }
-
-                    $grupo = $obj_horario["horarios"];
-
-                    echo "<p>".var_dump($usuario)."</p>";
-                    
-                    var_dump($grupo);
-                }
+                
 
                 // === tabla === //
-                $dia[0] = "Horas";
-                $dia[1] = "Lunes";
-                $dia[] = "Martes";
-                $dia[] = "Miercoles";
-                $dia[] = "Jueves";
-                $dia[] = "Viernes";
-
-                $hora[1] = "8:15 - 9:15";
-                $hora[2] = "9:15 - 10:15";
-                $hora[3] = "10:15 - 11:15";
-                $hora[4] = "11:15 - 11:45";
-                $hora[5] = "11:45 - 12:45";
-                $hora[6] = "12:45 - 13:45";
-                $hora[7] = "13:45 - 14:45";
-
-                if(isset($_POST["btnVerHorario"])){
-                    echo "<h2>Horario del profesor: ".$nombre_profesor."</h2>";
-                    echo "<table>";
-                    for ($j=0; $j < 8; $j++) {
-                        echo "<tr>";
-                        if($j == 4){
-                            echo "<td class='td-hora'>".$hora[$j]."</td><td colspan='5'>R E C R E O</td>";
-                        } else{ 
-                        
-                        for($i = 0; $i <= 5; $i++){
-                            if($j == 0)
-                                echo "<th>".$dia[$i]."</th>";
-                            else{
-                                if($i == 0){
-                                    echo "<td class='td-hora'>".$hora[$j]."</td>";
-                                } else {
-                                    echo "<td>".$usuario["usuario"]."</td>";
-                                }
-                            }
-                        }
-                        echo "</tr>";
-                    }
-                    }
-                    echo "</table>";
+                foreach($obj_horario->horarios as $tupla){
+                    if(isset($horario[$tupla->dia][$tupla->hora]))
+                        $horario[$tupla->dia][$tupla->hora].="/".$tupla->nombre;
+                    else
+                        $horario[$tupla->dia][$tupla->hora] = $tupla->nombre;
                 }
 
-                if(isset($_POST["btnClear"]))
-                    $_POST["btnVerHorario"]=null;
+                $dias[] = "";
+                $dias[] = "Lunes";
+                $dias[] = "Martes";
+                $dias[] = "Miércoles";
+                $dias[] = "Jueves";
+                $dias[] = "Viernes";
 
+                $horas[1]="8:15 - 9:15";
+                $horas[]="9:15 - 10:15";
+                $horas[]="10:15 - 11:15";
+                $horas[]="11:15 - 11:45";
+                $horas[]="11:45 - 12:45";
+                $horas[]="12:45 - 13:45";
+                $horas[]="13:45 - 14:45";
+
+                echo "<h3 class='centro'>Horario del Profesor: ".$nombre_profesor."</h3>";
+                echo "<h3 class='centro'>Horario del Profesor: ".$_POST["profesores"]."</h3>";
+                echo "<table>";
+                //tr para los dias de la cabecera
+                echo "<tr>";
+                    for($i = 0; $i <= 5; $i++){
+                        echo "<th>".$dias[$i]."</th>";
+                    }
+                echo "</tr>";
+                for($hora=1; $hora <= 7; $hora++){
+                    echo "<tr>";
+                    echo "<th>".$horas[$hora]."</th>";
+                    if($hora == 4)
+                        echo "<td colspan='5'>R E C R E O</td>";
+                    else{
+                        for ($dia = 1; $dia <=5 ; $dia++) { 
+                            if(isset($horario[$dia][$hora])){
+                                echo "<td>".$horario[$dia][$hora];
+                                echo "<form action='index.php' method='post'>";
+                                echo "<input type='hidden' value='".$_POST["profesores"]."' name='profesores'></input>";
+                                echo "<input type='hidden' value='".$dia."' name='dia'></input>";
+                                echo "<input type='hidden' value='".$hora."' name='hora'></input>";
+                                echo "<button class='enlace' name='btnEditar'>Editar</button>";
+                                echo "</form></td>";
+                            }
+                            else{
+                                echo "<td>";
+                                echo "<form action='index.php' method='post'>";
+                                echo "<input type='hidden' value='".$_POST["profesores"]."' name='profesores'></input>";
+                                echo "<input type='hidden' value='".$dia."' name='dia'></input>";
+                                echo "<input type='hidden' value='".$hora."' name='hora'></input>";
+                                echo "<button class='enlace' name='btnEditar'>Editar</button>";
+                                echo "</form></td>";
+                            }
+                        }
+                    }
+                    echo "</tr>";
+                }
+                echo "</table>";
+
+                if(isset($_POST["btnEditar"])){
+                    echo "<p>".$_POST["profesores"]."</p>";
+                    echo "<p>".$_POST["dia"]."</p>";
+                    echo "<p>".$_POST["hora"]."</p>";
+                }
+            }
             ?>
     </body>
 </html>

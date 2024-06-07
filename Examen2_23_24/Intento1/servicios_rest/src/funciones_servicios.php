@@ -43,22 +43,17 @@ require "config_bd.php";
         }
 
         try{
-            $consulta = "SELECT horario_lectivo.dia, horario_lectivo.grupo, horario_lectivo.hora, grupos.nombre FROM horario_lectivo, grupos WHERE grupos.id_grupo = horario_lectivo.grupo AND horario_lectivo.usuario = ?";
+            $consulta = "SELECT horario_lectivo.dia, horario_lectivo.grupo, horario_lectivo.hora, grupos.nombre FROM horario_lectivo, grupos WHERE grupos.id_grupo = horario_lectivo.grupo AND horario_lectivo.usuario=?";
             $sentencia = $conexion->prepare($consulta);
-            $sentencia->execute($usuario);
+            $sentencia->execute([$usuario]);
         }
         catch(PDOException $e){
             $respuesta["error"]="Imposible realizar la consulta en horarios_profesor():".$e->getMessage();
             return $respuesta;
-            $conexion = null;
-            $sentencia = null;
         }
 
-        if($sentencia->rowCount() > 0){
-            $respuesta["horarios"] = $sentencia->fetchAll(PDO::FETCH_ASSOC);
-        } else {
-            $respuesta["horarios"] = "ESTA VACIO";
-        }
+        $respuesta["horarios"] = $sentencia->fetchAll(PDO::FETCH_ASSOC);
+
 
         return $respuesta;
     }

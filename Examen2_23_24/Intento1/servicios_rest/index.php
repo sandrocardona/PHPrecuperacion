@@ -1,7 +1,7 @@
 <?php
 
-require "src/funciones_servicios.php";
 require __DIR__ . '/Slim/autoload.php';
+require "src/funciones_servicios.php";
 
 $app= new \Slim\App;
 
@@ -27,7 +27,7 @@ $app->get('/profesores',function($request){
 $app->get('/horarios_profesor/{usuario}',function($request){
 
     $usuario = $request->getAttribute("usuario");
-    echo json_encode(horarios_profesor([$usuario]));
+    echo json_encode(horarios_profesor($usuario));
 });
 
 
