@@ -16,12 +16,14 @@ if(isset($_POST["btnSalir"]))
 if(isset($_SESSION["usuario"])){
     $salto="index.php";
     require "src/seguridad.php";
+
     if($datos_usuario_log["tipo"] == "alumno")
         require "vistas/vista_normal.php";
     else {
         header("location:admin/index.php");
         exit;
     }
+    
 } else {
     require "vistas/vista_home.php";
 }

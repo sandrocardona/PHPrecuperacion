@@ -10,25 +10,25 @@
 
             $url_login = DIR_SERV."/login";
             $respuesta = consumir_servicios_REST($url_login, "POST", $datos);
-            $obj_login = json_decode($respuesta);
+            $obj_login = json_decode($respuesta,true);
 
             if(!$obj_login){
                 session_destroy();
                 die(error_page("NO OBJ","No hay obj en obj_login".$url_login));
             }
 
-            if(isset($obj_login->error)){
+            if(isset($obj_login["error"])){
                 session_destroy();
                 die(error_page("ERROR","ERROR en obj_login".$url_login));
             }
 
-            if(isset($obj_login->mensaje)){
+            if(isset($obj_login["mensaje"])){
                 $error_usuario = true;
             } else {
-                $_SESSION["usuario"] = $datos["usuario"];
-                $_SESSION["clave"] = $datos["clave"];
-                $_SESSION["tipo"] = $obj_login->usuario->tipo;
-                $_SESSION["api_session"] = $obj_login->api_session;
+                $_SESSION["usuario"] = $obj_login["usuario"]["usuario"];
+                $_SESSION["clave"] = $obj_login["usuario"]["clave"];
+                $_SESSION["api_session"] = $obj_login["api_session"];
+                $_SESSION["ult_accion"] = time();
 
                 if($_SESSION["tipo"]=="tutor"){
                     header("Location:admin/index.php");
