@@ -10,7 +10,7 @@
 </head>
 <body>
     <h1>Notas de los alumnos</h1>
-    <p>Bienvenido: </p>
+    <p>Bienvenido: <?php $datos_usuario_log->usuario ?></p>
     <form action="../index.php" method="post"><button type="submit" name="btnSalir">Salir</button></form>
 </body>
 </html>

@@ -45,7 +45,6 @@ function login($usuario, $clave)
         $_SESSION["usuario"] = $respuesta["usuario"]["usuario"];
         $_SESSION["clave"] = $respuesta["usuario"]["clave"];
         $_SESSION["tipo"] = $respuesta["usuario"]["tipo"];
-        $_SESSION["ult_accion"] = time();
 
     } else {
         $respuesta["mensaje"] = "Usuario no se encuentra registrado en la BD";
